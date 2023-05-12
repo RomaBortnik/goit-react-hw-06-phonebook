@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ContactListItem from 'components/ContactListItem';
 import css from './ContactList.module.css';
 
-const ContactList = ({ filteredContactsList, deleteContact }) => {
+const ContactList = ({ filteredContactsList }) => {
   return (
     <ul className={css.contactsList}>
       {filteredContactsList.map(contact => {
@@ -14,7 +14,6 @@ const ContactList = ({ filteredContactsList, deleteContact }) => {
             name={name}
             number={number}
             id={id}
-            onClick={deleteContact}
           ></ContactListItem>
         );
       })}
@@ -30,7 +29,6 @@ ContactList.propTypes = {
       number: PropTypes.string.isRequired,
     })
   ).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
 
 export default ContactList;

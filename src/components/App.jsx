@@ -1,70 +1,50 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
+// import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
+import { getContacts } from 'redux/selectors';
+import { getFilterValue } from 'redux/selectors';
 
-const STORAGE_KEY = 'contacts';
-const INITIAL_VALUE = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+// const STORAGE_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || INITIAL_VALUE
-  );
-  const [filter, setFilter] = useState('');
+  // const [contacts, setContacts] = useState(
+  //   () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || INITIAL_VALUE
+  // );
+  // const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    if (contacts === INITIAL_VALUE) {
-      return;
-    }
-    contacts.length === 0
-      ? localStorage.removeItem(STORAGE_KEY)
-      : localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   if (contacts === INITIAL_VALUE) {
+  //     return;
+  //   }
+  //   contacts.length === 0
+  //     ? localStorage.removeItem(STORAGE_KEY)
+  //     : localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+  // }, [contacts]);
 
-  const addContact = (name, number) => {
-    const nameValueToLowerCase = name.toLowerCase();
-    const equalEl = contacts.find(
-      contact => contact.name.toLowerCase() === nameValueToLowerCase
-    );
-
-    equalEl
-      ? alert(`${name} is already in contacts`)
-      : setContacts(prevState => [
-          ...prevState,
-          { id: nanoid(), name, number },
-        ]);
-  };
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilterValue);
+  console.log(contacts);
 
   const contactsListFilter = () => {
     const filterToLowerCase = filter.toLowerCase();
-    const filteredContactsList = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filterToLowerCase)
-    );
+    const filteredContactsList = contacts.filter(contact => {
+      console.log(contact.name);
+      return contact.name.toLowerCase().includes(filterToLowerCase);
+    });
     return filteredContactsList ? filteredContactsList : contacts;
-  };
-
-  const deleteContact = id => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
   };
 
   const filteredContactsList = contactsListFilter();
   return (
     <>
       <h1 className="title">Phonebook</h1>
-      <ContactForm addContact={addContact}></ContactForm>
+      <ContactForm></ContactForm>
       <h2 className="title">Contacts</h2>
-      <Filter onChange={e => setFilter(e.target.value)}></Filter>
-      <ContactList
-        filteredContactsList={filteredContactsList}
-        deleteContact={deleteContact}
-      ></ContactList>
+      <Filter></Filter>
+      <ContactList filteredContactsList={filteredContactsList}></ContactList>
     </>
   );
 };
