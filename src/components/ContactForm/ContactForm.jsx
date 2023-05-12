@@ -41,7 +41,6 @@ const ContactForm = () => {
 
   return (
     <>
-      {' '}
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form className={contactsForm}>
           <label className={contactsFormLabel} htmlFor="name">
